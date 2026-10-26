@@ -1,0 +1,31 @@
+#include <iostream>
+#include <cmath>
+#include <clocale>
+using namespace std;
+
+int main() {
+    setlocale(LC_ALL, "Russian");
+    double a = 0.0001;
+    double b = 0.0;
+    int n = 1;
+    while (true)
+    {
+
+        double num = pow(2, n);
+        double f = 1.0;
+        for (int i = 1; i <= n; i++) {
+            f *= i;
+        }
+            double d = pow(n, n);
+            double c = (num * f) / d;
+            if (c < a)
+            {
+            break;
+            }
+            b += c;
+            n++;
+        }
+    cout << "Итоговая сумма: " << b << endl;
+    cout << "Количество учтенных членов: " << n - 1 << endl;
+    return 0;
+}
