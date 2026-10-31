@@ -1,0 +1,27 @@
+#include <iostream>
+#include <clocale>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{
+    int max = 0;
+    int p, t = 0;
+    bool f = false;
+    setlocale(LC_ALL, "Russian");
+    int matrix[3][3];
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+        {
+            cin >> matrix[i][j];
+            if (matrix[i][j] >= max) 
+            {
+                max = matrix[i][j];
+                p, t = i, j;
+            }
+        }
+    }
+    cout << "максимальный элемент: " << max;
+    return 0;
+}
