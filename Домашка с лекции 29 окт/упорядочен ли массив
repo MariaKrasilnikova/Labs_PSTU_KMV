@@ -1,0 +1,29 @@
+#include <iostream>
+#include <clocale>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{
+    int p = 0;
+    int t = 0;
+    bool f = false;
+    setlocale(LC_ALL, "Russian");
+    int matrix[9];
+    for (int j = 0; j < 9; j++)
+    {
+        cin >> matrix[j];
+    }
+    while (p < 8 && f == false)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            if (matrix[i] > matrix[i + 1])
+            f = true;
+            else p += 1;
+        }
+    }
+    if (f == true) cout << "этот массив неупорядлчен по возрастанию";
+    else if (f == false) cout << "массив упорядочен по возрастанию";
+    return 0;
+}
