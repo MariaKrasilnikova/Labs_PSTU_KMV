@@ -1,0 +1,35 @@
+#include <iostream>
+#include <clocale>
+#include <cstdlib>
+using namespace std;
+
+int main()
+{
+    int maxIndex, minIndex = 0;
+    int s = 0;
+    int t = 0;
+    int matrix[6];
+    int max = 0;
+    int min = 10*10;
+    for (int i = 0; i < 6; i++)
+    {
+        matrix[i] = rand() % 100 - 50;
+        if (matrix[i] > max) 
+        {
+            max = matrix[i];
+            maxIndex = i;
+        }
+        else if (matrix[i] == max) s += 1;
+        if (matrix[i] < min)
+        {
+            min = matrix[i];
+            minIndex = i;
+        }
+        else if (matrix[i] == min) t += 1;
+        cout << matrix[i] << " ";
+    }
+    cout << endl;
+    cout << "максимальный элемент: " << max << "[" << maxIndex << "] " << "номер: " << maxIndex + 1 << '\n';
+    cout << "минимальный элемент: " << min << "[" << minIndex << "] " << "номер: " << minIndex + 1;
+    return 0;
+}
