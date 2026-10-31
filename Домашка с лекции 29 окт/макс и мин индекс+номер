@@ -19,17 +19,33 @@ int main()
             max = matrix[i];
             maxIndex = i;
         }
-        else if (matrix[i] == max) s += 1;
+        else if (matrix[i] == max) 
+        {
+            s += 1;
+            max = matrix[i];
+            maxIndex = i;
+        }
         if (matrix[i] < min)
         {
             min = matrix[i];
             minIndex = i;
         }
-        else if (matrix[i] == min) t += 1;
+        else if (matrix[i] == min) 
+        {
+            t += 1;
+            min = matrix[i];
+            minIndex = i;
+        }
         cout << matrix[i] << " ";
     }
     cout << endl;
     cout << "максимальный элемент: " << max << "[" << maxIndex << "] " << "номер: " << maxIndex + 1 << '\n';
     cout << "минимальный элемент: " << min << "[" << minIndex << "] " << "номер: " << minIndex + 1;
+    
+    if (s != 0 || t != 0)
+    {
+        cout << "максимальный элемент: " << max << "[" << maxIndex << "] " << "номер: " << maxIndex + 1 << "их кол-во: "<< s << '\n';
+        cout << "минимальный элемент: " << min << "[" << minIndex << "] " << "номер: " << minIndex + 1 << "их кол-во: "<< t;
+    }
     return 0;
 }
