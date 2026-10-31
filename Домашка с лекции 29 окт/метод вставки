@@ -32,13 +32,12 @@ int main()
         }
         
         arr[j + 1] = temp;
-
+        }
+        cout << "упорядоченный массив: ";
         for (int k = 0; k < n; k++) {
             cout << arr[k] << " ";
         }
         cout << endl;
-    }
 
     return 0;
 }
-
