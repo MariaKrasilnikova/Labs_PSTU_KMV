@@ -1,0 +1,31 @@
+#include <iostream>
+#include <clocale>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    int arr[7];
+    for (int i = 0; i < 7; i++)
+    {
+        cin >> arr[i];
+    }
+    for (int k = 0; k < 6; k++)
+    {
+        for (int j = k + 1; j < 7; j++)
+        {
+            if (arr[k] > arr[j])
+            {
+                int t = arr[k];
+                arr[k] = arr[j];
+                arr[j] = t;
+            }
+        }
+    }
+    cout << "отсортированный массив: ";
+    for (int r = 0; r < 7; r++)
+    {
+        cout << arr[r] << " ";
+    }
+    return 0;
+}
