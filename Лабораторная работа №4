@@ -1,0 +1,64 @@
+#include <iostream>
+#include <clocale>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    int arr[7];
+    for (int i = 0; i < 7; i++)
+    {
+        arr[i] = rand() % 100;
+    }
+    cout << "массив: ";
+    for (int r = 0; r < 7; r++)
+    {
+        cout << arr[r] << " ";
+    }
+    int max = 0;
+    int min = 10*10;
+    int minIndex, maxIndex = 0;
+    for (int j = 0; j < 7; j++)
+    {
+        if (arr[j] > max)
+        {
+            max = arr[j];
+            maxIndex = j;
+        }
+        if (arr[j] < min) 
+        {
+            min = arr[j];
+            minIndex = j;
+        }
+    }
+    int t = arr[minIndex];
+    arr[minIndex] = arr[maxIndex];
+    arr[maxIndex] = t;
+    cout << '\n' << "массив после обмена мин и макс: ";
+    for (int s = 0; s < 7; s++)
+    {
+        cout << arr[s] << " ";
+    }
+    double sum = 0;
+    for (int i = 0; i < 7; i++)
+    {
+        sum += arr[i];
+    }
+    double srznach = sum / 7.0;
+    double porog = srznach + (srznach * 0.1);
+    int news = 0;
+    for (int i = 0; i < 7; i++)
+    {
+        if (arr[i] <= porog)
+        {
+            arr[news] = arr[i];
+            news++;
+        }
+    }
+    cout << '\n' << "массив после удаления э-тов > среднего на 10%: ";
+    for(int i = 0; i < news; i++)
+    {
+        cout << arr[i] << " ";
+    }
+    return 0;
+}
