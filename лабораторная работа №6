@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+#include <windows.h>
+#include <clocale>
+#include <string>
+using namespace std;
+
+int main()
+{
+    setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+    cout << "Введите предложение(до 255 символов): ";
+    string s;
+    getline(cin, s);
+    string res = "";
+    string s1;
+    for(int i = 0; i <= s.size(); i++)
+    {
+        if (i < s.size() && s[i] != ' ' && s[i] != '.')
+        {
+            s1 += s[i];
+        }
+        else 
+        {
+            if (s1 != "")
+            {
+                reverse(s1.begin(), s1.end());
+                res += s1 + ' ';
+                s1 = "";
+            }
+        }
+    }
+    cout << "Перевернутая строка: "<< res << '.';
+    return 0;
+}
