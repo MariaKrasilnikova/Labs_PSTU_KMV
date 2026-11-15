@@ -10,13 +10,13 @@ int main() {
     float c = w - z;
     float r = b*b;
     float otv1 = c/r;
-    cout << "Òθο float:"<< ' ' << otv1 << '\n';
+    cout << "Ε‡ΔΔ float:"<< ' ' << otv1 << '\n';
     double x = 1000, y = 0.0001;
     double q = (x+y)*(x+y);
     double s = (x*x + 2*x*y);
     double v = q - s;
     double d = y*y;
     double otv2 = v / d;
-    cout << "Òθο double:" << ' ' << otv2 << '\n';
+    cout << "Ε‡ΔΔ double:" << ' ' << otv2 << '\n';
     return 0;
 }
