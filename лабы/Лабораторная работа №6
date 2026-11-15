@@ -1,0 +1,56 @@
+#include <iostream>
+using namespace std;
+
+int max_mas(int a[], int r)
+{
+    int max1 = a[0];
+    for (int p = 1; p < r; p++)
+    {
+        if (a[p] > max1)
+        max1 = a[p];
+    }
+    return max1;
+}
+
+int main()
+{
+    int st, n, m;
+    cin >> n >> m;
+    int arr[n][m];
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            cin >> arr[i][j];
+        }
+    }
+    int max;
+    cin >> st;
+    st--;
+    max = max_mas(arr[st], m);
+    cout << max << '\n';
+    int max_sttr;
+    for (int i = 0; i <= n; i++)
+    {
+        max_sttr = max_mas(arr[i], m);
+        int sdvig = max_sttr % m;
+        for (int k = 1; k <= sdvig; k++)
+        {
+            int temp = arr[i][m-1];
+            for (int j = m-1; j > 0; j--)
+            {
+                arr[i][j] = arr[i][j - 1];
+            }
+            arr[i][0] = temp;
+        }
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < m; j++)
+        {
+            cout << arr[i][j] << ' ';
+        }
+        cout << '\n';
+    }
+    return 0;
+}
