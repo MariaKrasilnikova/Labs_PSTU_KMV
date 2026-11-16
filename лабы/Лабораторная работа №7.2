@@ -1,0 +1,25 @@
+#include <cstdarg>
+#include <iostream>
+#include <clocale>
+using namespace std;
+
+void vosm(int count, ...)
+{
+    va_list args;
+    va_start(args, count);
+    for (int i = 0; i < count; i++)
+    {
+        int val = va_arg(args, int);
+        cout << oct << val << ' ';
+    }
+    cout << endl;
+    va_end(args);
+}
+
+int main()
+{
+    vosm(3, 2, 22, 32);
+    vosm(5, 73, 14, 8, 24, 21);
+    vosm(8, 224, 65, 12, 87, 567, 13, 95, 47);
+    return 0;
+}
