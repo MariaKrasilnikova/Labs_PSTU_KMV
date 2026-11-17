@@ -25,9 +25,9 @@ int main()
     cout << '\n' << "Введите число, строки с которым удалятся: ";
     int x;
     cin >> x;
+    bool f = false;
     for (int i = 0; i < n; i++)
     {
-        bool f = false;
         for(int j = 0; j < m; j++)
         {
             if (arr[i][j] == x)
@@ -49,6 +49,8 @@ int main()
             i--;
         }
     }
+    if (f == false)
+    cout << "Числа " << x << " нет в матрице" << '\n';
     for (int i = 0; i < n; i++)
     {
         for(int j = 0; j < m; j++)
