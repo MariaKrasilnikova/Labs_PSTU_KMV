@@ -33,7 +33,6 @@ int main()
             if (arr[i][j] == x)
             {
                 f = true;
-                break;
             }
         }
         if (f)
