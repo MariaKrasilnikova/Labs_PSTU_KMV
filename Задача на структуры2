@@ -1,0 +1,34 @@
+#include <iostream>
+#include <clocale>
+#include <string>
+using namespace std;
+
+struct Employee
+{
+    string name;
+    int days;
+    double change;
+    double prize;
+};
+
+int kalcul(int x, double y, double z)
+{
+    return x * y + z;
+}
+
+int main()
+{
+    setlocale(LC_ALL, ".UTF8");
+    Employee ad;
+    cout << "Введиет ФИО сотрудника:\n";
+    getline(cin, ad.name);
+    cin.ignore( );
+    cout << "Сколько смен отработал " << ad.name << "?\n";
+    cin >> ad.days;
+    cout << "Сколько составляет его оплата за день?\n";
+    cin >> ad.change;
+    cout << "Сколько составляет его премия?\n";
+    cin >> ad.prize;
+    cout << "Заработная плата" << ad.name <<  " составила: " << kalcul(ad.days, ad.change, ad.prize);
+    return 0; 
+}
