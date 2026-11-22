@@ -1,0 +1,29 @@
+#include <iostream>
+#include <clocale>
+using namespace std;
+
+struct Advertising
+{
+    int ann;
+    double visitor;
+    double profit;
+};
+
+int kalcul(int x, double y, double z)
+{
+    return x * y / 100 * z;
+}
+
+int main()
+{
+    setlocale(LC_ALL, ".UTF8");
+    Advertising ad;
+    cout << "Сколько объявлений показано посетителям?\n";
+    cin >> ad.ann;
+    cout << "Сколько процентов посетителей нажало на объявление?\n";
+    cin >> ad.visitor;
+    cout << "Сколько вы заработали в среднем за каждое нажатие на объявление?\n";
+    cin >> ad.profit;
+    cout << "Ваш доход составил: " << kalcul(ad.ann, ad.visitor, ad.profit);
+    return 0; 
+}
