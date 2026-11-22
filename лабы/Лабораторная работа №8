@@ -1,0 +1,105 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+struct Mdisk {
+    string name;
+    string author;
+    int duration;
+    int price;
+};
+
+void show(Mdisk disks[], int count) {
+    cout << "--------------------------------------------------------" << endl;
+    for (int i = 0; i < count; ++i) {
+        cout << i << ". " << disks[i].name 
+             << " | " << disks[i].author 
+             << " | " << disks[i].duration << " мин."
+             << " | " << disks[i].price << " руб." << endl;
+    }
+    cout << "--------------------------------------------------------" << endl;
+}
+
+int del(Mdisk disks[], int count, int target) {
+    for (int i = 0; i < count; ++i) {
+        if (disks[i].duration == target) {
+            cout << "\nУдален диск: " << disks[i].name << endl;
+            for (int j = i; j < count - 1; ++j) {
+                disks[j] = disks[j + 1];
+            }
+            return count - 1;
+        }
+    }
+    cout << "\nДиск с продолжительностью " << target << " не найден." << endl;
+    return count;
+}
+
+int add(Mdisk disks[], int count, int maxSize, int index) {
+    if (index < 0 || index >= count) {
+        cout << "\nОшибка: неверный номер элемента." << endl;
+        return count;
+    }
+    
+    if (count + 2 > maxSize) {
+        cout << "\nОшибка: недостаточно места в массиве для добавления!" << endl;
+        return count;
+    }
+
+    Mdisk d1, d2;
+
+    cout << "\nВведите данные для 1-го нового диска:" << endl;
+    cout << "Название (без пробелов): "; cin >> d1.name;
+    cout << "Автор (без пробелов): "; cin >> d1.author;
+    cout << "Продолжительность: "; cin >> d1.duration;
+    cout << "Цена: "; cin >> d1.price;
+
+    cout << "\nВведите данные для 2-го нового диска:" << endl;
+    cout << "Название (без пробелов): "; cin >> d2.name;
+    cout << "Автор (без пробелов): "; cin >> d2.author;
+    cout << "Продолжительность: "; cin >> d2.duration;
+    cout << "Цена: "; cin >> d2.price;
+
+    for (int i = count - 1; i > index; --i) {
+        disks[i + 2] = disks[i];
+    }
+
+    disks[index + 1] = d1;
+    disks[index + 2] = d2;
+
+    cout << "\n2 элемента успешно добавлены." << endl;
+    return count + 2;
+}
+
+int main() {
+    setlocale(LC_ALL, "ru_RU.UTF-8");
+
+    const int MAX_SIZE = 30;
+    Mdisk disks[MAX_SIZE] = {
+        {"Thriller", "MichaelJackson", 42, 2500},
+        {"Starboy", "TheWeeknd", 69, 2478},
+        {"HarryHouse", "HarryStyles", 41, 3000},
+        {"RandomAccess", "DaftPunk", 42, 1500}
+    };
+    int count = 4;
+
+    cout << "Исходный список дисков:" << endl;
+    show(disks, count);
+
+    int target;
+    cout << "\nВведите продолжительность диска, который хотите удалить (например, 42): ";
+    cin >> target;
+    count = del(disks, count, target);
+
+    cout << "\nСписок после удаления:" << endl;
+    show(disks, count);
+
+    int index;
+    cout << "\nВведите номер элемента (от 0 до " << count - 1 << "), после которого добавить 2 новых: ";
+    cin >> index;
+    count = add(disks, count, MAX_SIZE, index);
+
+    cout << "\nИтоговый список:" << endl;
+    show(disks, count);
+
+    return 0;
+}
