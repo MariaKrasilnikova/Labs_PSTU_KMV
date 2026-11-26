@@ -1,0 +1,128 @@
+#include <iostream>
+#include <string>
+#include <locale>
+
+using namespace std;
+
+// ANSI-цвета
+#define RESET   "\033[0m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+
+const int MAX_N = 20; // максимум колец
+
+// Каждый стержень: массив дисков + счетчик top
+int peg[4][MAX_N];
+int top[4];       // сколько колец на стержне (индексы 1..3)
+int total_disks;  // глобально для отрисовки
+
+// Рисуем один уровень (ряд) для всех трёх стержней
+void printLevel(int level) {
+    for (int i = 1; i <= 3; i++) {
+        int disk = 0;
+        // Кольцо на уровне level лежит в peg[i][level], если level < top[i]
+        if (level < top[i]) {
+            disk = peg[i][level];
+        }
+
+        if (disk == 0) {
+            cout << string(total_disks, ' ') << "|" << string(total_disks, ' ');
+        } else {
+            int pad = total_disks - disk;
+            cout << string(pad, ' ') << string(disk * 2 + 1, '=') << string(pad, ' ');
+        }
+        cout << "   ";
+    }
+    cout << "\n";
+}
+
+// Полная отрисовка с подсветкой
+void drawTower(int from, int to, int step, int totalSteps) {
+    cout << "\n--- Шаг " << step << " из " << totalSteps << " ---\n\n";
+
+    for (int level = total_disks - 1; level >= 0; level--) {
+        printLevel(level);
+    }
+
+    // Основание
+    for (int i = 1; i <= 3; i++) {
+        cout << string(total_disks * 2 + 1, '-') << "   ";
+    }
+    cout << "\n";
+
+    // Подписи с цветом
+    for (int i = 1; i <= 3; i++) {
+        string color = YELLOW;
+        if (i == from) color = RED;
+        else if (i == to) color = GREEN;
+        cout << color << string(total_disks, ' ') << i << string(total_disks, ' ') << RESET << "   ";
+    }
+    cout << "\n\n";
+}
+
+// Логика Ханойских башен с визуализацией
+void han(int n, int start, int point, int temp, int& step, int totalSteps) {
+    if (n <= 0)
+        return;
+
+    han(n - 1, start, temp, point, step, totalSteps);
+
+    // Перекладываем верхнее кольцо: берём с start, кладём на point
+    int disk = peg[start][top[start] - 1]; // верхнее кольцо
+    top[start]--;                           // убрали со старта
+    peg[point][top[point]] = disk;          // положили на приёмник
+    top[point]++;                           // увеличили счетчик
+
+    step++;
+    drawTower(start, point, step, totalSteps);
+
+    han(n - 1, temp, point, start, step, totalSteps);
+}
+
+// 2^n - 1
+int countSteps(int n) {
+    int s = 1;
+    for (int i = 0; i < n; i++) s *= 2;
+    return s - 1;
+}
+
+int main() {
+    setlocale(LC_ALL, ".UTF8");
+
+    int n;
+    cout << "Введите кол-во колец: ";
+    cin >> n;
+
+    if (n < 1 || n > MAX_N) {
+        cout << "Число колец должно быть от 1 до " << MAX_N << "\n";
+        return 1;
+    }
+
+    total_disks = n;
+
+    // Инициализация: все кольца на 1-м стержне, от большого к малому сверху вниз
+    // Внимание: peg[1][0] — самое большое, peg[1][n-1] — самое маленькое
+    for (int i = 0; i < n; i++) {
+        peg[1][i] = n - i; // n, n-1, ..., 1
+    }
+    top[1] = n;
+    top[2] = 0;
+    top[3] = 0;
+
+    int totalSteps = countSteps(n);
+
+    // Начальное состояние
+    cout << "\nНачальное состояние:\n";
+    for (int level = n - 1; level >= 0; level--) printLevel(level);
+    for (int i = 1; i <= 3; i++) cout << string(n * 2 + 1, '-') << "   ";
+    cout << "\n";
+    for (int i = 1; i <= 3; i++)
+        cout << YELLOW << string(n, ' ') << i << string(n, ' ') << RESET << "   ";
+    cout << "\n";
+
+    int step = 0;
+    han(n, 1, 3, 2, step, totalSteps);
+
+    return 0;
+}
