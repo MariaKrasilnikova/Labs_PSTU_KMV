@@ -1,105 +1,138 @@
 #include <iostream>
-#include <string>
+#include <clocale>
+#include <cstdio>
+#include <cstring>
 using namespace std;
 
 struct Mdisk {
-    string name;
-    string author;
-    int duration;
-    int price;
+    char name[50];
+    char author[50];
+    int  duration;
+    int  price;
 };
 
-void show(Mdisk disks[], int count) {
-    cout << "--------------------------------------------------------" << endl;
-    for (int i = 0; i < count; ++i) {
-        cout << i << ". " << disks[i].name 
-             << " | " << disks[i].author 
-             << " | " << disks[i].duration << " мин."
-             << " | " << disks[i].price << " руб." << endl;
-    }
-    cout << "--------------------------------------------------------" << endl;
+const char* FILENAME = "laba8.dat";
+
+void createFile() {
+    FILE* fp = fopen(FILENAME, "wb");
+    if (!fp) { cout << "Ошибка в открытии файла!\n"; return; }
+
+    Mdisk disks[4] = {
+        {"RandomAccessMemories", "Daft Punk", 74, 1300},
+        {"OKComputer",           "Radiohead", 53, 1900},
+        {"BackinBlack",          "AC/DC",     42, 990},
+        {"TheDarkSideoftheMoon", "PinkFloyd", 43, 1450}
+    };
+
+    fwrite(disks, sizeof(Mdisk), 4, fp);
+    fclose(fp);
+    cout << "Файл успешно сформирован!\n";
 }
 
-int del(Mdisk disks[], int count, int target) {
-    for (int i = 0; i < count; ++i) {
-        if (disks[i].duration == target) {
-            cout << "\nУдален диск: " << disks[i].name << endl;
-            for (int j = i; j < count - 1; ++j) {
-                disks[j] = disks[j + 1];
-            }
-            return count - 1;
+void printFile() {
+    FILE* fp = fopen(FILENAME, "rb");
+    if (!fp) { cout << "Ошибка в открытии файла\n"; return; }
+
+    Mdisk d;
+    cout << "\nСодержимое файла:\n";
+    while (fread(&d, sizeof(Mdisk), 1, fp) == 1) {
+        cout << d.name << " | " << d.author
+             << " | " << d.duration << " мин | " << d.price << " руб\n";
+    }
+    fclose(fp);
+    cout << '\n';
+}
+
+int getCount() {
+    FILE* fp = fopen(FILENAME, "rb");
+    if (!fp) return 0;
+    fseek(fp, 0, SEEK_END);
+    long size = ftell(fp);
+    fclose(fp);
+    return static_cast<int>(size / sizeof(Mdisk));
+}
+
+void DeletebyDuration(int targetduration) {
+    int count = getCount();
+    if (count == 0) return;
+
+    Mdisk* arr = new Mdisk[count];
+    FILE* fp = fopen(FILENAME, "rb");
+    fread(arr, sizeof(Mdisk), count, fp);
+    fclose(fp);
+
+    int t = -1;
+    for (int i = 0; i < count; i++) {
+        if (arr[i].duration == targetduration) {
+            t = i;
+            break;                       // нашли — выходим из цикла, а не из функции
         }
     }
-    cout << "\nДиск с продолжительностью " << target << " не найден." << endl;
-    return count;
+
+    if (t == -1) {
+        cout << "Элемент с этой продолжительностью не найден\n";
+        delete[] arr;
+        return;
+    }
+
+    char removed[50];
+    strcpy(removed, arr[t].name);        // сохранили имя ДО сдвига
+
+    for (int i = t; i < count - 1; i++)
+        arr[i] = arr[i + 1];
+
+    fp = fopen(FILENAME, "wb");          // <-- "wb", не "rb"!
+    fwrite(arr, sizeof(Mdisk), count - 1, fp);
+    fclose(fp);
+
+    cout << "Элемент \"" << removed << "\" успешно удален!\n";
+    delete[] arr;
 }
 
-int add(Mdisk disks[], int count, int maxSize, int index) {
-    if (index < 0 || index >= count) {
-        cout << "\nОшибка: неверный номер элемента." << endl;
-        return count;
-    }
-    
-    if (count + 2 > maxSize) {
-        cout << "\nОшибка: недостаточно места в массиве для добавления!" << endl;
-        return count;
+void addAfterIndex(int targetIndex) {
+    int count = getCount();
+    if (targetIndex < 0 || targetIndex >= count) {
+        cout << "Неверно введен номер!\n";
+        return;
     }
 
-    Mdisk d1, d2;
+    Mdisk* arr = new Mdisk[count];
+    FILE* fp = fopen(FILENAME, "rb");
+    fread(arr, sizeof(Mdisk), count, fp);
+    fclose(fp);
 
-    cout << "\nВведите данные для 1-го нового диска:" << endl;
-    cout << "Название (без пробелов): "; cin >> d1.name;
-    cout << "Автор (без пробелов): "; cin >> d1.author;
-    cout << "Продолжительность: "; cin >> d1.duration;
-    cout << "Цена: "; cin >> d1.price;
+    Mdisk newDisks[2] = {
+        {"NewAlbum1", "NewAuthor1", 60, 1500},
+        {"NewAlbum2", "NewAuthor2", 55, 1200}
+    };
 
-    cout << "\nВведите данные для 2-го нового диска:" << endl;
-    cout << "Название (без пробелов): "; cin >> d2.name;
-    cout << "Автор (без пробелов): "; cin >> d2.author;
-    cout << "Продолжительность: "; cin >> d2.duration;
-    cout << "Цена: "; cin >> d2.price;
+    fp = fopen(FILENAME, "wb");
+    fwrite(arr, sizeof(Mdisk), targetIndex + 1, fp);
+    fwrite(newDisks, sizeof(Mdisk), 2, fp);
+    fwrite(arr + targetIndex + 1, sizeof(Mdisk), count - targetIndex - 1, fp);
+    fclose(fp);
 
-    for (int i = count - 1; i > index; --i) {
-        disks[i + 2] = disks[i];
-    }
-
-    disks[index + 1] = d1;
-    disks[index + 2] = d2;
-
-    cout << "\n2 элемента успешно добавлены." << endl;
-    return count + 2;
+    cout << "Добавлены два элемента после элемента под номером "
+         << targetIndex << '\n';
+    delete[] arr;
 }
 
 int main() {
-    setlocale(LC_ALL, "ru_RU.UTF-8");
+    setlocale(LC_ALL, "Russian");
+    createFile();
+    printFile();
 
-    const int MAX_SIZE = 30;
-    Mdisk disks[MAX_SIZE] = {
-        {"Thriller", "MichaelJackson", 42, 2500},
-        {"Starboy", "TheWeeknd", 69, 2478},
-        {"HarryHouse", "HarryStyles", 41, 3000},
-        {"RandomAccess", "DaftPunk", 42, 1500}
-    };
-    int count = 4;
+    int dur;
+    cout << "Введите продолжительность диска для удаления: ";
+    cin >> dur;
+    DeletebyDuration(dur);
+    printFile();
 
-    cout << "Исходный список дисков:" << endl;
-    show(disks, count);
-
-    int target;
-    cout << "\nВведите продолжительность диска, который хотите удалить (например, 42): ";
-    cin >> target;
-    count = del(disks, count, target);
-
-    cout << "\nСписок после удаления:" << endl;
-    show(disks, count);
-
-    int index;
-    cout << "\nВведите номер элемента (от 0 до " << count - 1 << "), после которого добавить 2 новых: ";
-    cin >> index;
-    count = add(disks, count, MAX_SIZE, index);
-
-    cout << "\nИтоговый список:" << endl;
-    show(disks, count);
+    int ind;
+    cout << "Введите номер диска, после которого добавить 2: ";
+    cin >> ind;
+    addAfterIndex(ind);
+    printFile();
 
     return 0;
 }
